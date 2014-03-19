@@ -44,10 +44,10 @@
 	[button setNormalBg:[[UIImage imageNamed:@"tokenNormal.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:0]];
 	[button setHighlightedBg:[[UIImage imageNamed:@"tokenHighlighted.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:0]];
 	[button setAdjustsImageWhenHighlighted:NO];
-	[button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-	[[button titleLabel] setFont:[UIFont fontWithName:@"Helvetica Neue" size:15]];
-	[[button titleLabel] setLineBreakMode:UILineBreakModeTailTruncation];
-	[button setTitleEdgeInsets:UIEdgeInsetsMake(2, 10, 0, 10)];
+	[button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+	[[button titleLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-Medium" size:13]];
+	[[button titleLabel] setLineBreakMode:NSLineBreakByTruncatingTail];
+	[button setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
 	
 	[button setTitle:string forState:UIControlStateNormal];
 	
@@ -76,7 +76,7 @@
 	else
 	{
 		[self setBackgroundImage:self.normalBg forState:UIControlStateNormal];
-		[self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+		[self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 	}
 }
 
@@ -88,10 +88,15 @@
     [super dealloc];
 }
 
+- (UIKeyboardAppearance)keyboardAppearance
+{
+	return UIKeyboardAppearanceDark;
+}
+
 - (BOOL)becomeFirstResponder {
     BOOL superReturn = [super becomeFirstResponder];
     if (superReturn) {
-        self.toggled = YES;
+		self.toggled = YES;
     }
     return superReturn;
 }
@@ -123,7 +128,6 @@
 - (void)insertText:(NSString *)text {
     return;
 }
-
 
 - (BOOL)canBecomeFirstResponder {
     return YES;
