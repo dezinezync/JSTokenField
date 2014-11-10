@@ -32,18 +32,15 @@
 
 @implementation JSTokenButton
 
-@synthesize toggled = _toggled;
-@synthesize normalBg = _normalBg;
-@synthesize highlightedBg = _highlightedBg;
-@synthesize representedObject = _representedObject;
-@synthesize parentField = _parentField;
-
 + (JSTokenButton *)tokenWithString:(NSString *)string representedObject:(id)obj
 {
 	JSTokenButton *button = (JSTokenButton *)[self buttonWithType:UIButtonTypeCustom];
-	[button setNormalBg:[[UIImage imageNamed:@"tokenNormal.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:0]];
-	[button setHighlightedBg:[[UIImage imageNamed:@"tokenHighlighted.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:0]];
-	[button setAdjustsImageWhenHighlighted:NO];
+//	[button setNormalBg:[[UIImage imageNamed:@"tokenNormal.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:0]];
+//	[button setHighlightedBg:[[UIImage imageNamed:@"tokenHighlighted.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:0]];
+	
+	button.normalColor = button.tintColor;
+	button.highlightedColor = [button.tintColor colorWithAlphaComponent:0.75];
+	
 	[button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 	[[button titleLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-Medium" size:13]];
 	[[button titleLabel] setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -51,11 +48,15 @@
 	
 	[button setTitle:string forState:UIControlStateNormal];
 	
+	[button setBackgroundColor:button.normalColor];
+	
 	[button sizeToFit];
 	CGRect frame = [button frame];
 	frame.size.width += 20;
 	frame.size.height = 25;
 	[button setFrame:frame];
+	
+	button.layer.cornerRadius = 12.5f;
 	
 	[button setToggled:NO];
 	
@@ -68,24 +69,15 @@
 {
 	_toggled = toggled;
 	
-	if (_toggled)
+	if(_toggled)
 	{
-		[self setBackgroundImage:self.highlightedBg forState:UIControlStateNormal];
-		[self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		self.backgroundColor = self.highlightedColor;
 	}
 	else
 	{
-		[self setBackgroundImage:self.normalBg forState:UIControlStateNormal];
-		[self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		self.backgroundColor = self.normalColor;
 	}
-}
-
-- (void)dealloc
-{
-	self.representedObject = nil;
-	self.highlightedBg = nil;
-	self.normalBg = nil;
-    [super dealloc];
+	
 }
 
 - (UIKeyboardAppearance)keyboardAppearance
@@ -110,7 +102,16 @@
 }
 
 #pragma mark - UIKeyInput
-- (void)deleteBackward {
+
+- (void)deleteBackward
+{
+	
+	if(!self.selected)
+	{
+		self.selected = YES;
+		return;
+	}
+	
     id <JSTokenFieldDelegate> delegate = _parentField.delegate;
     if ([delegate respondsToSelector:@selector(tokenField:shouldRemoveToken:representedObject:)]) {
         NSString *name = [self titleForState:UIControlStateNormal];
@@ -125,8 +126,21 @@
 - (BOOL)hasText {
     return NO;
 }
-- (void)insertText:(NSString *)text {
-    return;
+- (void)insertText:(NSString *)text
+{
+	if(!self.superview) return;
+//	Make the JSTextField firstResponder
+	[[self.superview subviews] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+		
+		if([obj isKindOfClass:[UITextField class]])
+		{
+			[(UITextField *)obj becomeFirstResponder];
+		}
+		
+	}];
+	
+	self.selected = NO;
+
 }
 
 - (BOOL)canBecomeFirstResponder {

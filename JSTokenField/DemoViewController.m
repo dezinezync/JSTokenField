@@ -34,10 +34,6 @@
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[_toRecipients release], _toRecipients = nil;
-	[_toField release], _toField = nil;
-	
-	[super dealloc];
 }
 
 - (void)didReceiveMemoryWarning
@@ -63,7 +59,7 @@
 	[_toField setDelegate:self];
 	[self.view addSubview:_toField];
     
-    UIView *separator1 = [[[UIView alloc] initWithFrame:CGRectMake(0, _toField.bounds.size.height-1, _toField.bounds.size.width, 1)] autorelease];
+    UIView *separator1 = [[UIView alloc] initWithFrame:CGRectMake(0, _toField.bounds.size.height-1, _toField.bounds.size.width, 1)];
     [separator1 setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
     [_toField addSubview:separator1];
     [separator1 setBackgroundColor:[UIColor lightGrayColor]];
@@ -73,7 +69,7 @@
 	[_ccField setDelegate:self];
 	[self.view addSubview:_ccField];
     
-    UIView *separator2 = [[[UIView alloc] initWithFrame:CGRectMake(0, _ccField.bounds.size.height-1, _ccField.bounds.size.width, 1)] autorelease];
+    UIView *separator2 = [[UIView alloc] initWithFrame:CGRectMake(0, _ccField.bounds.size.height-1, _ccField.bounds.size.width, 1)];
     [separator2 setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
     [_ccField addSubview:separator2];
     [separator2 setBackgroundColor:[UIColor lightGrayColor]];
@@ -83,8 +79,6 @@
 - (void)viewDidUnload
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[_toRecipients release], _toRecipients = nil;
-	[_toField release], _toField = nil;
 	[super viewDidUnload];
 }
 
@@ -122,13 +116,14 @@
 - (void)tokenField:(JSTokenField *)tokenField didRemoveTokenAtIndex:(NSUInteger)index
 {	
 	[_toRecipients removeObjectAtIndex:index];
-	NSLog(@"Deleted token %d\n%@", index, _toRecipients);
+	NSLog(@"Deleted token %ld\n%@", (long)index, _toRecipients);
 }
 
-- (BOOL)tokenFieldShouldReturn:(JSTokenField *)tokenField {
+- (BOOL)tokenFieldShouldReturn:(JSTokenField *)tokenField
+{
     NSMutableString *recipient = [NSMutableString string];
 	
-	NSMutableCharacterSet *charSet = [[[NSCharacterSet whitespaceCharacterSet] mutableCopy] autorelease];
+	NSMutableCharacterSet *charSet = [[NSCharacterSet whitespaceCharacterSet] mutableCopy];
 	[charSet formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
 	
     NSString *rawStr = [[tokenField textField] text];

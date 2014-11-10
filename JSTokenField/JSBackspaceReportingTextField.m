@@ -10,7 +10,8 @@
 
 @implementation JSBackspaceReportingTextField
 
-- (void)deleteBackward {
+- (void)deleteBackward
+{
     BOOL shouldDismiss = (self.text.length == 0);
 
     [super deleteBackward];
@@ -20,6 +21,24 @@
             [self.delegate textField:self shouldChangeCharactersInRange:NSMakeRange(0, 0) replacementString:@""];
         }
     }
+}
+
+- (BOOL)keyboardInputShouldDelete:(UITextField *)textField{
+	BOOL shouldDelete = YES;
+	
+	if ([UITextField instancesRespondToSelector:_cmd]) {
+		BOOL (*keyboardInputShouldDelete)(id, SEL, UITextField *) = (BOOL (*)(id, SEL, UITextField *))[UITextField instanceMethodForSelector:_cmd];
+		
+		if (keyboardInputShouldDelete) {
+			shouldDelete = keyboardInputShouldDelete(self, _cmd, textField);
+		}
+	}
+	
+	if (![textField.text length] && [[[UIDevice currentDevice] systemVersion] intValue] >= 8) {
+		[self deleteBackward];
+	}
+	
+	return shouldDelete;
 }
 
 @end
