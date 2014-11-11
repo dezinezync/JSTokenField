@@ -29,7 +29,7 @@
 #import <UIKit/UIKit.h>
 @class JSTokenField;
 
-@interface JSTokenButton : UIButton <UIKeyInput,UITextInputTraits>
+@interface JSTokenButton : UIButton <UIKeyInput,UITextInputTraits,UIAppearance>
 
 @property (nonatomic, getter=isToggled) BOOL toggled;
 
@@ -37,8 +37,10 @@
 
 @property (nonatomic, assign) JSTokenField *parentField;
 
-@property (nonatomic, copy) UIColor *normalColor, *highlightedColor;
+@property (nonatomic, copy) UIColor *normalColor UI_APPEARANCE_SELECTOR, *highlightedColor UI_APPEARANCE_SELECTOR;
 
 + (JSTokenButton *)tokenWithString:(NSString *)string representedObject:(id)obj;
+
++ (instancetype)appearance;
 
 @end

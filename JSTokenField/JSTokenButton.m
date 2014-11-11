@@ -32,15 +32,16 @@
 
 @implementation JSTokenButton
 
++ (id)appearance
+{
+	id obj = [super appearance];
+	return obj;
+}
+
 + (JSTokenButton *)tokenWithString:(NSString *)string representedObject:(id)obj
 {
 	JSTokenButton *button = (JSTokenButton *)[self buttonWithType:UIButtonTypeCustom];
-//	[button setNormalBg:[[UIImage imageNamed:@"tokenNormal.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:0]];
-//	[button setHighlightedBg:[[UIImage imageNamed:@"tokenHighlighted.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:0]];
-	
-	button.normalColor = button.tintColor;
-	button.highlightedColor = [button.tintColor colorWithAlphaComponent:0.75];
-	
+
 	[button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 	[[button titleLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-Medium" size:13]];
 	[[button titleLabel] setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -78,6 +79,26 @@
 		self.backgroundColor = self.normalColor;
 	}
 	
+}
+
+- (void)setNormalColor:(UIColor *)normalColor
+{
+	
+	if(_normalColor != normalColor)
+	{
+		_normalColor = normalColor;
+		self.backgroundColor = _normalColor;
+	}
+	
+}
+
+- (void)setHighlightedColor:(UIColor *)highlightedColor
+{
+	if(_highlightedColor != highlightedColor)
+	{
+		_highlightedColor = highlightedColor;
+		if(self.isSelected || self.toggled) self.backgroundColor = _highlightedColor;
+	}
 }
 
 - (UIKeyboardAppearance)keyboardAppearance
