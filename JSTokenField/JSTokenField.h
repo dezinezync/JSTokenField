@@ -1,9 +1,9 @@
 //
 //	Copyright 2011 James Addyman (JamSoft). All rights reserved.
-//	
+//
 //	Redistribution and use in source and binary forms, with or without modification, are
 //	permitted provided that the following conditions are met:
-//	
+//
 //		1. Redistributions of source code must retain the above copyright notice, this list of
 //			conditions and the following disclaimer.
 //
@@ -36,12 +36,23 @@ extern NSString *const JSTokenFieldNewFrameKey;
 extern NSString *const JSTokenFieldOldFrameKey;
 extern NSString *const JSDeletedTokenKey;
 
-@interface JSTokenField : UIView <UITextFieldDelegate>
+@interface JSTokenField : UIView <UITextFieldDelegate> {
+	
+	NSMutableArray *_tokens;
+	
+	UITextField *_textField;
+	
+	id <JSTokenFieldDelegate> _delegate;
+	
+	JSTokenButton *_deletedToken;
+	
+	UILabel *_label;
+}
 
 @property (nonatomic, readonly) UITextField *textField;
 @property (nonatomic, retain) UILabel *label;
 @property (nonatomic, readonly, copy) NSMutableArray *tokens;
-@property (nonatomic, weak) id <JSTokenFieldDelegate> delegate;
+@property (nonatomic, assign) id <JSTokenFieldDelegate> delegate;
 
 - (void)addTokenWithTitle:(NSString *)string representedObject:(id)obj;
 - (void)removeTokenForString:(NSString *)string;
@@ -63,5 +74,7 @@ extern NSString *const JSDeletedTokenKey;
 
 - (BOOL)tokenFieldShouldReturn:(JSTokenField *)tokenField;
 - (void)tokenFieldDidEndEditing:(JSTokenField *)tokenField;
+
+- (void)tokenFieldDidChangeChracters;
 
 @end
